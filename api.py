@@ -6,13 +6,20 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 import torch
 from chronos import Chronos2Pipeline
+from fastapi.middleware.cors import CORSMiddleware
 
 CONTEXT_LENGTH = 1024
 
 pipeline = Chronos2Pipeline.from_pretrained("amazon/chronos-2", device_map="cpu")
 
 app = FastAPI()
-
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"], 
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 class ForecastRequest(BaseModel):
     data: list[list[float]]
